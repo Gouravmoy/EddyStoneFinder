@@ -25,7 +25,7 @@ import android.widget.ListView;
 import com.example.lenovo.eddystonefinder.BeaconValidators.UidValidator;
 import com.example.lenovo.eddystonefinder.MyApplication;
 import com.example.lenovo.eddystonefinder.R;
-import com.example.lenovo.eddystonefinder.Utils.Utils;
+import com.example.lenovo.eddystonefinder.utils.Utils;
 import com.example.lenovo.eddystonefinder.adapter.EddystoneListAdapter;
 import com.example.lenovo.eddystonefinder.beans.Beacons;
 import com.example.lenovo.eddystonefinder.extra.Constants;
@@ -62,6 +62,7 @@ public class ScannerActivity extends AppCompatActivity {
     ArrayList<Beacons> eddyStoneList;
 
     ListView eddyStoneListView;
+    Toolbar toolbar;
 
 
     @Override
@@ -69,12 +70,12 @@ public class ScannerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         init();
         eddyStoneList = new ArrayList<>();
-        arrayAdapter = new EddystoneListAdapter(MyApplication.getAppContext(), eddyStoneList);
+        arrayAdapter = new EddystoneListAdapter(MyApplication.getAppContext());
 
         eddyStoneListView = (ListView) findViewById(R.id.device_list_eddystone);
         eddyStoneListView.setAdapter(arrayAdapter);
@@ -96,6 +97,7 @@ public class ScannerActivity extends AppCompatActivity {
                     beacon = new Beacons(deviceAddress, result.getRssi());
                     deviceToBeaconMap.put(deviceAddress, beacon);
                     eddyStoneList.add(beacon);
+                    toolbar.setSubtitle("Found beacons : " + eddyStoneList.size());
                     arrayAdapter.replaceWith(eddyStoneList);
                 }
                 byte[] serviceData = scanRecord.getServiceData(EDDYSTONE_SERVICE_UUID);

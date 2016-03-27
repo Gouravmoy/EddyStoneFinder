@@ -10,7 +10,7 @@ import com.example.lenovo.eddystonefinder.R;
 import com.example.lenovo.eddystonefinder.beans.Beacons;
 import com.example.lenovo.eddystonefinder.beans.ViewHolder;
 import com.example.lenovo.eddystonefinder.extra.L;
-import com.example.lenovo.eddystonefinder.Utils.BeaconUtils;
+import com.example.lenovo.eddystonefinder.utils.BeaconUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,9 +77,9 @@ public class EddystoneListAdapter extends BaseAdapter {
         return view;
     }
 
-    public void replaceWith(List<Beacons> eddystones) {
+    public void replaceWith(List<Beacons> _eddystones) {
         this.eddystones.clear();
-        this.eddystones.addAll(eddystones);
+        this.eddystones.addAll(_eddystones);
         notifyDataSetChanged();
     }
 }

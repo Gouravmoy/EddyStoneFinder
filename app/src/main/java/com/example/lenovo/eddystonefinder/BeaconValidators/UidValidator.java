@@ -1,6 +1,6 @@
 package com.example.lenovo.eddystonefinder.BeaconValidators;
 
-import com.example.lenovo.eddystonefinder.Utils.Utils;
+import com.example.lenovo.eddystonefinder.utils.Utils;
 import com.example.lenovo.eddystonefinder.beans.Beacons;
 import com.example.lenovo.eddystonefinder.extra.L;
 
