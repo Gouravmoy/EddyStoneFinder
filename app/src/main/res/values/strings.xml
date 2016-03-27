@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">EddyStoneFinder</string>
+    <string name="button_send">Start EddyStone Scanning</string>
+    <string name="action_settings">Settings</string>
 </resources>
