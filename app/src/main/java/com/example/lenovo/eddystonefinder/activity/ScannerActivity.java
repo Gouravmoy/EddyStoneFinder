@@ -41,11 +41,14 @@ public class ScannerActivity extends AppCompatActivity {
     private static final String TAG = "ScannerActivity";
     private static final int REQUEST_ENABLE_BLUETOOTH = 1;
 
+    private static final int delay = 5000;
+
     // An aggressive scan for nearby devices that reports immediately.
     private static final ScanSettings SCAN_SETTINGS =
             new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).setReportDelay(0)
                     .build();
     private static final Handler handler = new Handler(Looper.getMainLooper());
+    private static Handler scannHandler;
 
     // The Eddystone Service UUID, 0xFEAA.
     private static final ParcelUuid EDDYSTONE_SERVICE_UUID =
@@ -99,9 +102,12 @@ public class ScannerActivity extends AppCompatActivity {
                     eddyStoneList.add(beacon);
                     toolbar.setSubtitle("Found beacons : " + eddyStoneList.size());
                     arrayAdapter.replaceWith(eddyStoneList);
+                } else {
+                    deviceToBeaconMap.get(deviceAddress).setRssi(result.getRssi());
                 }
                 byte[] serviceData = scanRecord.getServiceData(EDDYSTONE_SERVICE_UUID);
                 validateServiceData(deviceAddress, serviceData);
+                scanner.stopScan(scanCallback);
             }
 
             @Override
@@ -186,9 +192,18 @@ public class ScannerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         handler.removeCallbacksAndMessages(null);
-        if (scanner != null) {
+        /*if (scanner != null) {
             scanner.startScan(scanFilters, SCAN_SETTINGS, scanCallback);
-        }
+        }*/
+        scannHandler = new Handler();
+        scannHandler.postDelayed(new Runnable() {
+            public void run() {
+                if (scanner != null) {
+                    scanner.startScan(scanFilters, SCAN_SETTINGS, scanCallback);
+                }
+                scannHandler.postDelayed(this, delay);
+            }
+        }, delay);
     }
 
     @Override

@@ -64,8 +64,8 @@ public class EddystoneListAdapter extends BaseAdapter {
         holder.eddystoneNamespaceTextView.setText("Namespace: " + (eddystone.getUidValue() == null ? "-" : eddystone.getUidValue().substring(0, 20)));
         holder.eddystoneInstanceIdTextView.setText("Instance ID: " + (eddystone.getUidValue() == null ? "-" : eddystone.getUidValue().substring(20, 32)));
         holder.eddystoneUrlTextView.setText("URL: " + (eddystone.getUrlValue() == null ? "-" : eddystone.getUrlValue()));
-        L.m("Namespace: " + (eddystone.getUidValue() == null ? "-" : eddystone.getUidValue().substring(0, 20)));
-        L.m("Instance ID: " + (eddystone.getUidValue() == null ? "-" : eddystone.getUidValue().substring(20, 32)));
+        //L.m("Namespace: " + (eddystone.getUidValue() == null ? "-" : eddystone.getUidValue().substring(0, 20)));
+        //L.m("Instance ID: " + (eddystone.getUidValue() == null ? "-" : eddystone.getUidValue().substring(20, 32)));
         L.m("Distance - " + BeaconUtils.distanceFromRssi(eddystone.getRssi(), eddystone.getTxPower()));
     }
 
