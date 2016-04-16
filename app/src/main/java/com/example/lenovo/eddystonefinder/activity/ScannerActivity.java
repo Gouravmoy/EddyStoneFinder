@@ -49,7 +49,7 @@ public class ScannerActivity extends AppCompatActivity {
                     .build();
     private static final Handler handler = new Handler(Looper.getMainLooper());
     private static Handler scannHandler;
-
+//Just a committ
     // The Eddystone Service UUID, 0xFEAA.
     private static final ParcelUuid EDDYSTONE_SERVICE_UUID =
             ParcelUuid.fromString("0000FEAA-0000-1000-8000-00805F9B34FB");
