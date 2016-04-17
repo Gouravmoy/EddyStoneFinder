@@ -25,6 +25,7 @@ import android.widget.ListView;
 import com.example.lenovo.eddystonefinder.BeaconValidators.UidValidator;
 import com.example.lenovo.eddystonefinder.MyApplication;
 import com.example.lenovo.eddystonefinder.R;
+import com.example.lenovo.eddystonefinder.utils.DitanceUtil;
 import com.example.lenovo.eddystonefinder.utils.Utils;
 import com.example.lenovo.eddystonefinder.adapter.EddystoneListAdapter;
 import com.example.lenovo.eddystonefinder.beans.Beacons;
@@ -49,7 +50,7 @@ public class ScannerActivity extends AppCompatActivity {
                     .build();
     private static final Handler handler = new Handler(Looper.getMainLooper());
     private static Handler scannHandler;
-//Just a committ
+
     // The Eddystone Service UUID, 0xFEAA.
     private static final ParcelUuid EDDYSTONE_SERVICE_UUID =
             ParcelUuid.fromString("0000FEAA-0000-1000-8000-00805F9B34FB");
@@ -64,6 +65,9 @@ public class ScannerActivity extends AppCompatActivity {
 
     ArrayList<Beacons> eddyStoneList;
 
+    private String oldBeaconAddress;
+    private String latestBeaconAddress;
+
     ListView eddyStoneListView;
     Toolbar toolbar;
 
@@ -75,6 +79,9 @@ public class ScannerActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        latestBeaconAddress = "";
+        oldBeaconAddress = "";
 
         init();
         eddyStoneList = new ArrayList<>();
@@ -108,6 +115,17 @@ public class ScannerActivity extends AppCompatActivity {
                 byte[] serviceData = scanRecord.getServiceData(EDDYSTONE_SERVICE_UUID);
                 validateServiceData(deviceAddress, serviceData);
                 scanner.stopScan(scanCallback);
+
+                latestBeaconAddress = DitanceUtil.getNearestBeacon(deviceToBeaconMap);
+                if (!oldBeaconAddress.equals(latestBeaconAddress)) {
+                    oldBeaconAddress = latestBeaconAddress;
+                    if (latestBeaconAddress.endsWith("E6"))
+                        latestBeaconAddress = "Blueberry";
+                    else
+                        latestBeaconAddress = "Mint";
+                    L.m("Beacon Changed");
+                    L.t(MyApplication.getAppContext(), latestBeaconAddress + " is the nearest Beacon");
+                }
             }
 
             @Override
