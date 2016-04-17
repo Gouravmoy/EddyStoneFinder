@@ -42,7 +42,7 @@ public class ScannerActivity extends AppCompatActivity {
     private static final String TAG = "ScannerActivity";
     private static final int REQUEST_ENABLE_BLUETOOTH = 1;
 
-    private static final int delay = 5000;
+    private static final int delay = 4000;
 
     // An aggressive scan for nearby devices that reports immediately.
     private static final ScanSettings SCAN_SETTINGS =
@@ -71,6 +71,8 @@ public class ScannerActivity extends AppCompatActivity {
     ListView eddyStoneListView;
     Toolbar toolbar;
 
+    boolean isScannerStart = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +98,7 @@ public class ScannerActivity extends AppCompatActivity {
         scanCallback = new ScanCallback() {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
+                L.m("Detected");
                 ScanRecord scanRecord = result.getScanRecord();
                 if (scanRecord == null) {
                     return;
@@ -110,14 +113,19 @@ public class ScannerActivity extends AppCompatActivity {
                     toolbar.setSubtitle("Found beacons : " + eddyStoneList.size());
                     arrayAdapter.replaceWith(eddyStoneList);
                 } else {
+                    if (deviceAddress.endsWith("E6")) {
+                        L.m("Blueberry Detected with Rssis - " + result.getRssi());
+                    } else {
+                        L.m("Mint Detected with Rssi - " + result.getRssi());
+                    }
                     deviceToBeaconMap.get(deviceAddress).setRssi(result.getRssi());
                 }
                 byte[] serviceData = scanRecord.getServiceData(EDDYSTONE_SERVICE_UUID);
                 validateServiceData(deviceAddress, serviceData);
-                scanner.stopScan(scanCallback);
+                //scanner.stopScan(scanCallback);
 
                 latestBeaconAddress = DitanceUtil.getNearestBeacon(deviceToBeaconMap);
-                if (!oldBeaconAddress.equals(latestBeaconAddress)) {
+                if (!oldBeaconAddress.equals(latestBeaconAddress) && !latestBeaconAddress.equals("")) {
                     oldBeaconAddress = latestBeaconAddress;
                     if (latestBeaconAddress.endsWith("E6"))
                         latestBeaconAddress = "Blueberry";
@@ -217,6 +225,7 @@ public class ScannerActivity extends AppCompatActivity {
         scannHandler.postDelayed(new Runnable() {
             public void run() {
                 if (scanner != null) {
+                    scanner.stopScan(scanCallback);
                     scanner.startScan(scanFilters, SCAN_SETTINGS, scanCallback);
                 }
                 scannHandler.postDelayed(this, delay);
