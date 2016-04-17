@@ -15,9 +15,11 @@ public class DitanceUtil {
         for (Map.Entry<String, Beacons> beaconsEntry : deviceToBeaconMap.entrySet()) {
             Beacons eddystone = beaconsEntry.getValue();
             currDistance = BeaconUtils.distanceFromRssi(eddystone.getRssi(), eddystone.getTxPower());
-            if (minDistance > currDistance) {
-                minDistance = currDistance;
-                returnValue = eddystone.getDeviceAddress();
+            if (currDistance < 0.75) {
+                if (minDistance > currDistance) {
+                    minDistance = currDistance;
+                    returnValue = eddystone.getDeviceAddress();
+                }
             }
         }
         return returnValue;

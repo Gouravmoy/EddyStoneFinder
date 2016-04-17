@@ -71,6 +71,8 @@ public class ScannerActivity extends AppCompatActivity {
     ListView eddyStoneListView;
     Toolbar toolbar;
 
+    boolean isScannerStart = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +98,7 @@ public class ScannerActivity extends AppCompatActivity {
         scanCallback = new ScanCallback() {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
+                L.m("Detected");
                 ScanRecord scanRecord = result.getScanRecord();
                 if (scanRecord == null) {
                     return;
@@ -111,7 +114,7 @@ public class ScannerActivity extends AppCompatActivity {
                     arrayAdapter.replaceWith(eddyStoneList);
                 } else {
                     if (deviceAddress.endsWith("E6")) {
-                        L.m("Blueberry Detected with Rssi - " + result.getRssi());
+                        L.m("Blueberry Detected with Rssis - " + result.getRssi());
                     } else {
                         L.m("Mint Detected with Rssi - " + result.getRssi());
                     }
@@ -119,10 +122,10 @@ public class ScannerActivity extends AppCompatActivity {
                 }
                 byte[] serviceData = scanRecord.getServiceData(EDDYSTONE_SERVICE_UUID);
                 validateServiceData(deviceAddress, serviceData);
-                scanner.stopScan(scanCallback);
+                //scanner.stopScan(scanCallback);
 
                 latestBeaconAddress = DitanceUtil.getNearestBeacon(deviceToBeaconMap);
-                if (!oldBeaconAddress.equals(latestBeaconAddress)) {
+                if (!oldBeaconAddress.equals(latestBeaconAddress) && !latestBeaconAddress.equals("")) {
                     oldBeaconAddress = latestBeaconAddress;
                     if (latestBeaconAddress.endsWith("E6"))
                         latestBeaconAddress = "Blueberry";
@@ -222,6 +225,7 @@ public class ScannerActivity extends AppCompatActivity {
         scannHandler.postDelayed(new Runnable() {
             public void run() {
                 if (scanner != null) {
+                    scanner.stopScan(scanCallback);
                     scanner.startScan(scanFilters, SCAN_SETTINGS, scanCallback);
                 }
                 scannHandler.postDelayed(this, delay);
