@@ -42,7 +42,7 @@ public class ScannerActivity extends AppCompatActivity {
     private static final String TAG = "ScannerActivity";
     private static final int REQUEST_ENABLE_BLUETOOTH = 1;
 
-    private static final int delay = 5000;
+    private static final int delay = 4000;
 
     // An aggressive scan for nearby devices that reports immediately.
     private static final ScanSettings SCAN_SETTINGS =
@@ -110,6 +110,11 @@ public class ScannerActivity extends AppCompatActivity {
                     toolbar.setSubtitle("Found beacons : " + eddyStoneList.size());
                     arrayAdapter.replaceWith(eddyStoneList);
                 } else {
+                    if (deviceAddress.endsWith("E6")) {
+                        L.m("Blueberry Detected with Rssi - " + result.getRssi());
+                    } else {
+                        L.m("Mint Detected with Rssi - " + result.getRssi());
+                    }
                     deviceToBeaconMap.get(deviceAddress).setRssi(result.getRssi());
                 }
                 byte[] serviceData = scanRecord.getServiceData(EDDYSTONE_SERVICE_UUID);
